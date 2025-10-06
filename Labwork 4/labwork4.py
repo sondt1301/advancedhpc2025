@@ -38,6 +38,9 @@ def grayscale_gpu(rgb, gray):
     gray_value = np.uint8((rgb[tidx, tidy, 0] + rgb[tidx, tidy, 1] + rgb[tidx, tidy, 2]) / 3)
     gray[tidx, tidy, 0] = gray[tidx, tidy, 1] = gray[tidx, tidy, 2] = gray_value
 
+# First run to remove odd
+grayscale_gpu[(math.ceil(img_height / 4), math.ceil(img_width / 4)), (4, 4)](devInput, devOutput)
+
 blockSizes = [(4, 4), (8, 8), (16, 16), (32, 32)]
 responseTimes = []
 for blockSize in blockSizes:
