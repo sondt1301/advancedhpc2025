@@ -6,7 +6,7 @@ from numba import cuda
 import cv2
 
 # Import image
-img = cv2.imread('rgb.jpg')
+img = cv2.imread('lenna.png')
 img_width = img.shape[1]
 img_height = img.shape[0]
 print("Original image shape: ", img.shape)
@@ -41,6 +41,9 @@ def grayscale_gpu(rgb, gray):
     tidx = cuda.threadIdx.x + cuda.blockIdx.x * cuda.blockDim.x
     gray_value = np.uint8((rgb[tidx, 0] + rgb[tidx, 1] + rgb[tidx, 2]) / 3)
     gray[tidx, 0] = gray[tidx, 1] = gray[tidx, 2] = gray_value
+
+# First run to remove odd
+grayscale_gpu[math.ceil(pixelCount / 32), 32](devInput, devOutput)
 
 blockSizes = [32, 64, 128, 256]
 responseTimes = []
